@@ -69,7 +69,12 @@ def dashboard(periodo: str | None = Query(default=None)) -> dict[str, Any]:
     periodo = periodo or local_today().strftime("%Y-%m")
     inicio, fim, dias_mes = month_bounds(periodo)
     hoje = local_today()
-    dia_corte = min(hoje.day, dias_mes) if (hoje.year, hoje.month) == (inicio.year, inicio.month) else dias_mes
+    if (hoje.year, hoje.month) == (inicio.year, inicio.month):
+        dia_corte = min(hoje.day, 30)
+    elif (inicio.year, inicio.month) < (hoje.year, hoje.month):
+        dia_corte = 30
+    else:
+        dia_corte = 0
     try:
         bases = query_rows(
             "SELECT codigo_base, base, sc, ativo FROM c2c_bases "
