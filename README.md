@@ -13,10 +13,10 @@ O importador lê as colunas **A** (remessa), **C** (data do envio), **E** (base 
 
 ## Importar diariamente no Windows
 
-Crie uma pasta `dados\entrada` neste projeto e coloque nela o export diário `Exportar pedido JMS de envio*.xlsx` e a planilha atual de Gestão de Colaboradores. Na primeira configuração, instale as dependências:
+Crie uma pasta `dados\entrada` neste projeto e coloque nela o export diário `Exportar pedido JMS de envio*.xlsx` e a planilha atual de Gestão de Colaboradores. Use Python 3.13 para criar o ambiente (o Python padrão instalado pode não ter wheel compatível do Pandas). Na primeira configuração, instale as dependências:
 
 ```powershell
-py -m venv .venv
+py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
