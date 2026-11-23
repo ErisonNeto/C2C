@@ -18,6 +18,16 @@ ROOT = Path(__file__).resolve().parent
 JT_API_URL = os.getenv("JT_API_URL", "https://jt-api.rockettechbr.com.br").rstrip("/")
 JT_API_KEY = os.getenv("JT_API_KEY", "").strip()
 RM_ALVO = "ORLEAN DA SILVA DO NASCIMENTO"
+SCS_PERMITIDOS = frozenset({
+    "ALANA OLIVEIRA DO NASCIMENTO",
+    "ANA BEATRIZ SOARES DA CUNHA",
+    "FERNANDO SILVA OLIVEIRA",
+    "JADSON OLIVEIRA DA CRUZ",
+    "JOHAN RAFAEL QUEIROZ PACHECO",
+    "JOSE MARLON DOS SANTOS NASCIMENTO",
+    "MARCELO HENRIQUE COSTA NOVAES",
+    "PRICILA DO ESPIRITO SANTO DE LIMA",
+})
 
 app = FastAPI(title="C2C | Regional Orlean", version="1.1.0")
 app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
@@ -55,11 +65,21 @@ def as_date(value: Any) -> date | None:
         return None
 
 
+def normalizar_nome(value: Any) -> str:
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = text.encode("ascii", "ignore").decode("ascii")
+    return " ".join(text.upper().split())
+
+
 def load_bases() -> list[dict[str, Any]]:
-    return query_rows(
+    rows = query_rows(
         "SELECT codigo_base, base, sc, ativo FROM c2c_bases "
         f"WHERE UPPER(rm) = {sql_quote(RM_ALVO)} AND ativo = TRUE ORDER BY sc, base"
     )
+    return [
+        row for row in rows
+        if normalizar_nome(row.get("sc")) in SCS_PERMITIDOS
+    ]
 
 
 def load_data_range() -> tuple[date | None, date | None]:
