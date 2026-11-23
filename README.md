@@ -27,27 +27,27 @@ JT_API_URL=https://jt-api.rockettechbr.com.br
 JT_API_KEY=COLOQUE_SUA_CHAVE_AQUI
 ```
 
-Depois que o relatório estiver baixado na pasta, rode primeiro a conferência e, em seguida, a importação:
+Depois que o relatório estiver baixado na pasta, rode primeiro a conferência e, em seguida, a importação diária:
 
 ```powershell
 .\.venv\Scripts\python.exe .\importar_excel.py --entrada .\dados\entrada --dry-run
-.\.venv\Scripts\python.exe .\importar_excel.py --entrada .\dados\entrada
+.\importar_diario.ps1
 ```
 
 O importador seleciona o arquivo JMS e a Gestão mais recentes na pasta. O relatório precisa estar completo antes da carga. Arquivos temporários do Excel (`~$`) são ignorados. A importação envia o cadastro atualizado de bases e as remessas para as tabelas `c2c_bases` e `c2c_remessas` pela rota `/import` da JT API.
 
 ### Execução automática
 
-Para automatizar, configure o Agendador de Tarefas do Windows para executar o segundo comando acima **depois do horário em que o export JMS chega à pasta**. Use como programa:
+Para automatizar, configure o Agendador de Tarefas do Windows para executar o script abaixo **depois do horário em que o export JMS chega à pasta**. Use como programa:
 
 ```text
-C:\CAMINHO\DO\PROJETO\.venv\Scripts\python.exe
+powershell.exe
 ```
 
 E como argumentos:
 
 ```text
-C:\CAMINHO\DO\PROJETO\importar_excel.py --entrada C:\CAMINHO\DO\PROJETO\dados\entrada
+-NoProfile -ExecutionPolicy Bypass -File "C:\CAMINHO\DO\PROJETO\importar_diario.ps1"
 ```
 
 Defina também o campo **Iniciar em** como a pasta raiz do projeto. O script não acessa o JMS nem baixa arquivos por conta própria: ele processa o export e a Gestão já salvos na pasta.
