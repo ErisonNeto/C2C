@@ -22,7 +22,7 @@ function dateLabel(iso) {
   const [year, month, day] = String(iso).slice(0,10).split("-");
   return `${day}/${month}`;
 }
-function classPct(value) { return Number(value || 0) >= 1 ? "sla-good" : "sla-bad"; }
+function classPct(value) { return value == null ? "sla-neutral" : Number(value) >= 1 ? "sla-good" : Number(value) >= 2/3 ? "sla-warning" : "sla-bad"; }
 
 async function getJSON(url) {
   const sep = url.includes("?") ? "&" : "?";
@@ -167,7 +167,8 @@ function renderBaseRows(rows) {
 function setKpis(data) {
   document.getElementById("totalPacotes").textContent = fmt(data.pacotes);
   document.getElementById("metaMensal").textContent = fmt(data.meta_mensal);
-  document.getElementById("metaMensalNota").textContent = `${fmt(data.bases)} bases × 30 × ${monthSpan(data.data_inicio,data.data_fim)} mês(es) no período`;
+  document.getElementById("metaMensalNota").textContent = `${fmt(data.bases)} bases × 30 (mínimo 20) × ${monthSpan(data.data_inicio,data.data_fim)} mês(es) no período`;
+  document.getElementById("atingimento").className = classPct(data.atingimento);
   document.getElementById("atingimento").textContent = pct(data.atingimento);
   document.getElementById("metaPeriodoNota").textContent = `${fmt(data.pacotes)} de ${fmt(data.meta_periodo)} esperados no período`;
   document.getElementById("freteTotal").textContent = fmtMoney(data.frete_total);
