@@ -998,5 +998,5 @@ tbody tr:hover td:first-child {
   .c2c-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.sla-warning{color:#926000!important;background:#fff4cf;}
+.sla-warning{color:#b88600!important;font-weight:800;}
 .sla-neutral{color:#667085!important;}
